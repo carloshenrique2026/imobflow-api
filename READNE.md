@@ -16,4 +16,19 @@ O **ImobFlow** nasce com o objetivo de ser uma plataforma moderna, escalável e 
 
 1. Clone o repositório:
    ```bash
-   git clone [https://github.com/SEU-USUARIO/imobflow-api.git](https://github.com/SEU-USUARIO/imobflow-api.git)
+   git clone [https://github.com/SEU-USUARIO/imobflow-api.git](https://github.com/SEU-USUARIO/imobflow-api.git)4
+
+ cd imobflow-api
+
+ pnpm install
+
+ pnpm dev
+
+ O servidor estará rodando e respondendo na porta 3001 (http://localhost:3001).
+
+👨‍💻 Autor
+Desenvolvido por Carlos Henrique da Silva Farias
+
+Desenvolvedor Full Stack & Corretor de Imóveis (CRECI 13610)
+
+Portfólio
