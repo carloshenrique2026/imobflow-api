@@ -1,12 +1,7 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js';
+import { sequelize } from '../../config/database.js';
 
 const Imovel = sequelize.define('Imovel', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
   titulo: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,9 +14,10 @@ const Imovel = sequelize.define('Imovel', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-}, {
-  tableName: 'imoveis',
-  timestamps: true, // Cria automaticamente os campos createdAt e updatedAt
+  imagem: {
+    type: DataTypes.STRING,
+    allowNull: true, // A imagem é opcional
+  }
 });
 
 export default Imovel;
