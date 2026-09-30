@@ -1,107 +1,31 @@
 import { Router } from 'express';
-import multer from 'multer';
-import path from 'path';
-import Imovel from '../app/models/Imovel.js';
+import { upload } from '../config/multer.js';
+import { validate } from '../app/middlewares/validate.js';
+import {
+  criarImovelSchema,
+  atualizarImovelSchema,
+} from '../app/schemas/ImovelSchema.js';
+import ImovelController from '../app/controllers/ImovelController.js';
 
 const router = Router();
 
-// Configuração do armazenamento do Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-});
+router.get('/imoveis', ImovelController.index);
+router.get('/imoveis/:id', ImovelController.show);
 
-const upload = multer({ storage });
+router.post(
+  '/imoveis',
+  upload.single('imagem'),
+  validate(criarImovelSchema),
+  ImovelController.store,
+);
 
-// Listar todos os imóveis (GET)
-router.get('/imoveis', async (req, res) => {
-  try {
-    const imoveis = await Imovel.findAll();
-    return res.status(200).json(imoveis);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Erro ao listar imóveis.' });
-  }
-});
+router.put(
+  '/imoveis/:id',
+  upload.single('imagem'),
+  validate(atualizarImovelSchema),
+  ImovelController.update,
+);
 
-// Cadastrar um novo imóvel com Imagem (POST)
-router.post('/imoveis', upload.single('imagem'), async (req, res) => {
-  try {
-    // Garantia defensiva caso o req.body venha vazio por algum detalhe do FormData
-    const body = req.body || {};
-    const titulo = body.titulo;
-    const bairro = body.bairro;
-    const valor = body.valor;
-    const imagem = req.file ? req.file.filename : null;
-
-    const novoImovel = await Imovel.create({ 
-      titulo, 
-      bairro, 
-      valor, 
-      imagem 
-    });
-
-    return res.status(201).json(novoImovel);
-  } catch (error) {
-    console.error('Erro detalhado ao cadastrar:', error);
-    return res.status(500).json({ error: 'Erro ao cadastrar imóvel.' });
-  }
-});
-
-// Atualizar um imóvel existente (PUT)
-router.put('/imoveis/:id', upload.single('imagem'), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const body = req.body || {};
-    const { titulo, bairro, valor } = body;
-
-    const imovel = await Imovel.findByPk(id);
-
-    if (!imovel) {
-      return res.status(404).json({ error: 'Imóvel não encontrado.' });
-    }
-
-    const dadosAtualizados = { titulo, bairro, valor };
-    
-    if (req.file) {
-      dadosAtualizados.imagem = req.file.filename;
-    }
-
-    await imovel.update(dadosAtualizados);
-
-    return res.status(200).json({
-      message: 'Imóvel atualizado com sucesso!',
-      imovel
-    });
-  } catch (error) {
-    console.error('Erro detalhado ao atualizar:', error);
-    return res.status(500).json({ error: 'Erro ao atualizar o imóvel.' });
-  }
-});
-
-// Deletar um imóvel (DELETE)
-router.delete('/imoveis/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const imovel = await Imovel.findByPk(id);
-
-    if (!imovel) {
-      return res.status(404).json({ error: 'Imóvel não encontrado.' });
-    }
-
-    await imovel.destroy();
-
-    return res.status(200).json({ message: 'Imóvel deletado com sucesso!' });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Erro ao deletar o imóvel.' });
-  }
-});
+router.delete('/imoveis/:id', ImovelController.destroy);
 
 export default router;
