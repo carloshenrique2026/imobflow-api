@@ -70,3 +70,12 @@ Desenvolvido por Carlos Henrique da Silva Farias
 Desenvolvedor Full Stack & Corretor de Imóveis (CRECI 13610)
 
 [Portfólio](https://carloshenriqueprogramador.com.br/)
+
+## 🚀 Como Executar o Projeto
+
+Siga os passos abaixo para rodar o projeto localmente na sua máquina:
+
+1. **Clone o repositório:**
+   ```bash
+   git clone [https://github.com/carloshenrique2026/imobflow-api.git](https://github.com/carloshenrique2026/imobflow-api.git)
+   cd imobflow-api
